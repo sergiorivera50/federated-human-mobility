@@ -1,3 +1,6 @@
+# JetBrains IDE
+.idea
+
 # Hydra and wanbd outputs
 data
 .vscode
