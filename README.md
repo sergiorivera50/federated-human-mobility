@@ -18,10 +18,18 @@ football match nearby, then all the food places may get more than the usual crow
 hospitals) can be sensitive for people.
 - Accuracy-wise, it’ll be better than training models at venues in isolation.
 
-Train for all venues (venue category as input?) then query for each individual venue or
-category depending on the inference needs. Think of it as simply predicting the number of
-people coming to any specific venue, no matter the category.
+**How to run this?**
 
-This results in one client per venue, with multiple venues of multiple types.
-Only one federated model is to be trained, on many different venue category types,
-in order to predict its popularity.
+Follow `TEMPLATE.md` instructions on how to setup the project template.
+
+Then, run the prepare dataset to download and partition the Foursquare dataset.
+
+```bash
+poetry run python -m project.task.human_mobility.dataset_preparation
+```
+
+After, you can modify the configuration task to perform several experiments, then simply run the configuration.
+
+```bash
+poetry run python -m project.main --config-name=human_mobility
+```
