@@ -13,7 +13,7 @@ from flwr.common import NDArrays
 import numpy as np
 from torch import nn
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 import enum
 
 CID = str | int | Path
@@ -204,3 +204,28 @@ class Ext(enum.StrEnum):
     HISTORY = "json"
     MAIN = "log"
     WANDB_RUN = "json"
+
+
+class HumanMobilityDataset(Dataset):
+    def __init__(self, dataframe, sequence_length, prediction_length, features, label):
+        self.dataframe = dataframe
+        self.sequence_length = sequence_length
+        self.prediction_length = prediction_length
+        self.features = features
+        self.label = label
+
+    def __len__(self):
+        # Number of possible sequences we can create
+        return len(self.dataframe) - self.sequence_length - self.prediction_length + 1
+
+    def __getitem__(self, idx):
+        sequence = self.dataframe.iloc[idx : idx + self.sequence_length]
+        target = self.dataframe.iloc[
+            idx
+            + self.sequence_length : idx
+            + self.sequence_length
+            + self.prediction_length
+        ][self.label].values
+        return torch.tensor(
+            sequence[self.features + [self.label]].values, dtype=torch.float
+        ), torch.tensor(target, dtype=torch.float)
